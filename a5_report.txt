@@ -1,0 +1,39 @@
+Name: Nathan Vitzthum and Grace Liu 
+Student ID: 2265935, 2224986
+Email: natevitz@uw.edu, liugrace@uw.edu
+
+1. In the context of the Towers-of-Hanoi World MDP, explain how the Value Iteration 
+algorithm uses the Bellman equations to iteratively compute the value table. (5 points)
+
+The Value Iteration algorithm uses the Bellman equations to iteratively compute 
+the value table by going through each non-terminal state and finding 
+the Q-values for all possible actions using the formula:
+Q(s,a) = Σ[T(s,a,s') * (R(s,a,s') + γ * V(s'))]
+where T is the transition function, R is the reward function, γ is the discount factor, 
+and V is the current value estimate. Then it updates the value of the state to its maximum Q-value:
+V(s) = max_a Q(s,a). In our algorithm, the max_delta value, which is the maximum absolute value difference for all of
+the value updates, is also found.
+
+2. How did you decide your custom epsilon function? What thoughts went into that and what would you change to further optimize your exploration? If your function was strong, explain why. (5 points)
+
+For our custom epsilon function, we wanted the function to start with high
+exploration, by having epsilon be close to 1, since the agents starts with knowing nothing/very little. 
+As the agent gains more knowledge, we want to favor exploitation for faster convergence
+and avoiding performing unnecessary computations. To further
+optimize the exploration, we could adjust the decay rate (0.000001 * n_step) to 
+control how quickly exploration decreases. Our function is strong because there 
+is a smooth transition from exploration to exploitation, and the minimum epsilon value of 
+0.000001 prevents complete exploitation, making sure there is some level of randomness.
+
+3. What is another exploration strategy other than epsilon-greedy that you believe would fit well with the Towers of Hanoi formulation? Why? (5 points)
+
+Another exploration strategy that could work well for the Towers of Hanoi is the exploration function discussed in class. 
+The exploration function takes a value estimate u, based on previous knowledge, and a visit count n, and returns an optimistic utility. It can be expressed as:
+f(u,n) = u + k/n
+where k is a constant that controls the exploration rate.
+This could be effective for Towers of Hanoi because it in the beginning it explores
+more random states, leading to more possible paths discovered, possibly leading to faster convergence.
+As the agent gains more experience, the exploration function naturally shifts towards exploitation of the 
+best-known moves similarly to epsilon greedy. The new Q function is: Q(s,a) ← Q(s,a) + α[R(s,a,s') + γ max_a' f(Q(s',a'), N(s',a'))].
+This approach balances exploration and exploitation similarily to simple ε-greedy strategies, while ensuring
+exploitation does not occur too early, potentially leading to faster convergence to optimal policies in the Towers of Hanoi problem.
